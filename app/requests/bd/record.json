@@ -1,0 +1,28 @@
+[
+    {
+        "tipoEntidad": "empresa",
+        "tipoId": "",
+        "numeroId": "",
+        "nombres": "",
+        "apellidos": "",
+        "nit": "1234",
+        "razonSocial": "cafee2",
+        "correo": "coffee@gmail.com",
+        "telefono": "3219254704",
+        "direccion": "dsss",
+        "municipio": "dddd"
+    },
+    {
+        "tipoEntidad": "empresa",
+        "tipoId": "",
+        "numeroId": "",
+        "nombres": "",
+        "apellidos": "",
+        "nit": "1234",
+        "razonSocial": "cafee2",
+        "correo": "coffee@gmail.com",
+        "telefono": "3219254704",
+        "direccion": "dsss",
+        "municipio": "dddd"
+    }
+]

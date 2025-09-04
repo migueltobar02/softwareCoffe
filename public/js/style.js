@@ -30,3 +30,35 @@ const form = document.getElementById('formRegistro');
       };
       preview.textContent = JSON.stringify(data, null, 2);
     });
+// Manejar el envío del formulario de registro de clientes
+document.getElementById("formRegistro").addEventListener("submit", async function(e) {
+  e.preventDefault();
+
+  const data = {
+    tipoEntidad: document.getElementById("tipoEntidad").value,
+    tipoId: document.getElementById("tipoId")?.value || "",
+    numeroId: document.getElementById("numeroId")?.value || "",
+    nombres: document.getElementById("nombres")?.value || "",
+    apellidos: document.getElementById("apellidos")?.value || "",
+    nit: document.getElementById("nit")?.value || "",
+    razonSocial: document.getElementById("razonSocial")?.value || "",
+    correo: document.getElementById("correo").value,
+    telefono: document.getElementById("telefono").value,
+    direccion: document.getElementById("direccion").value,
+    municipio: document.getElementById("municipio").value
+  };
+
+  // Enviar datos a PHP
+  const response = await fetch("../../requests/request.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+  });
+
+  if (response.ok) {
+    alert("✅ Registro guardado en  record.JSON");
+    document.getElementById("formRegistro").reset();
+  } else {
+    alert("❌ Error al guardar");
+  }
+});
