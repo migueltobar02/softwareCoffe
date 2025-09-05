@@ -22,6 +22,7 @@
                 <button class="nav-btn" onclick="showSection('ingresos')">Ingresos</button>
                 <button class="nav-btn" onclick="showSection('egresos')">Egresos</button>
                 <button class="nav-btn" onclick="showSection('jornales')">Jornales</button>
+                <button class="nav-btn" onclick="showSection('empleados')">Empleados</button>
                 <button class="nav-btn" onclick="showSection('cosechas')">Cosechas</button>
                 <button class="nav-btn" onclick="showSection('ventas')">Ventas</button>
                 <button class="nav-btn" onclick="showSection('reportes')">Reportes</button>
@@ -97,7 +98,7 @@
                 <div>
                     <h3 style="color: #8B4513; margin-bottom: 20px;">Registrar Nuevo Ingreso</h3>
                     <form id="form-ingresos">
-                        <div class="form-group">
+                        <div class="form-group">xx
                             <label for="tipo-ingreso">Tipo de Ingreso</label>
                             <select id="tipo-ingreso" required>
                                 <option value="">Seleccionar tipo</option>
@@ -272,10 +273,7 @@
                         <div class="form-group">
                             <label for="empleado-jornal">Empleado</label>
                             <select id="empleado-jornal" required>
-                                <option value="">Seleccionar empleado</option>
-                                <option value="juan-perez">Juan Pérez</option>
-                                <option value="maria-garcia">María García</option>
-                                <option value="carlos-lopez">Carlos López</option>
+                                <!-- Opciones se llenarán dinámicamente -->
                             </select>
                         </div>
                         <div class="form-group">
@@ -284,7 +282,7 @@
                         </div>
                         <div class="form-group">
                             <label for="horas-trabajadas">Horas Trabajadas</label>
-                            <input type="number" id="horas-trabajadas" step="0.5" placeholder="8.0" required>
+                            <input type="number" id="horas-trabajadas" step="0.5" required disabled>
                         </div>
                         <div class="form-group">
                             <label for="tarifa-hora">Tarifa por Hora</label>
@@ -307,38 +305,6 @@
                         <button type="submit" class="btn-primary">Registrar Jornal</button>
                     </form>
                 </div>
-                
-                <div>
-                    <h3 style="color: #8B4513; margin-bottom: 20px;">Empleados Activos</h3>
-                    <div class="table-container">
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Empleado</th>
-                                    <th>Horas Mes</th>
-                                    <th>Total Mes</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Juan Pérez</td>
-                                    <td>160 hrs</td>
-                                    <td>$2,400,000</td>
-                                </tr>
-                                <tr>
-                                    <td>María García</td>
-                                    <td>140 hrs</td>
-                                    <td>$2,100,000</td>
-                                </tr>
-                                <tr>
-                                    <td>Carlos López</td>
-                                    <td>180 hrs</td>
-                                    <td>$2,700,000</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
             </div>
 
             <h3 style="color: #8B4513; margin-bottom: 15px;">Historial de Jornales</h3>
@@ -359,6 +325,64 @@
                           
                     </tbody>
                 </table>
+            </div>
+        </div>
+
+          
+        <div id="empleados" class="content-section">
+            <h2 class="section-title">Gestión de Empleados</h2>
+            <div class="empleados-header" style="display: flex; justify-content: flex-end; margin-bottom: 15px;">
+                <button class="btn-primary" id="btnAgregarEmpleado">+ Agregar Empleado</button>
+            </div>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Horas Trabajadas por Mes</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-empleados">
+                        <!-- Se llenará dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+            <!-- Modal Empleado -->
+            <div class="modal fade" id="modalEmpleado" tabindex="-1" aria-labelledby="modalEmpleadoLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <form id="formEmpleado">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="modalEmpleadoLabel">Agregar Empleado</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                      <input type="hidden" id="empleadoId">
+                      <div class="form-group">
+                        <label for="nombreEmpleado">Nombre</label>
+                        <input type="text" class="form-control" id="nombreEmpleado" required>
+                      </div>
+                      <div class="form-group">
+                        <label for="horasEmpleado">Horas Trabajadas por Mes</label>
+                        <input type="number" class="form-control" id="horasEmpleado" required>
+                      </div>
+                      <div class="form-group">
+                        <label for="estadoEmpleado">Estado</label>
+                        <select class="form-control" id="estadoEmpleado" required>
+                          <option value="Activo">Activo</option>
+                          <option value="Inactivo">Inactivo</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="submit" class="btn btn-success">Guardar</button>
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
             </div>
         </div>
 
@@ -594,7 +618,7 @@
 
 
             <div class="clientes-header">
-                <a href="app/views/form/registroCliente.html" class="btn-primary">+ Registrar Cliente</a>
+                <a href="/app/views/form/registroCliente.html" class="btn-primary">+ Registrar Cliente</a>
             </div>
             <div class="table-container">
                 <table class="data-table">
@@ -745,5 +769,9 @@
      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <script src="public/js/index.js"></script>
+    <script src="public/js/empleado.js"></script>
+</body>
+</html>
+    <script src="public/js/empleado.js"></script>
 </body>
 </html>

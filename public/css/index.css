@@ -302,3 +302,10 @@ a.btn-link:hover {
 .clientes-header a {
   text-decoration: none;
 }
+
+.empleados-header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 15px;
+}
