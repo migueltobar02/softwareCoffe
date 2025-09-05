@@ -98,11 +98,22 @@ document.getElementById("form-egresos").addEventListener("submit", function (e) 
 document.getElementById("form-jornales").addEventListener("submit", function (e) {
   e.preventDefault()
 
+  const empleadoIdx = document.getElementById("empleado-jornal").value
+  let empleadoNombre = ""
+  let horasTrabajadas = 0
+  if (window.getEmpleadosRegistrados) {
+    const empleados = window.getEmpleadosRegistrados()
+    if (empleados[empleadoIdx]) {
+      empleadoNombre = empleados[empleadoIdx].nombre
+      horasTrabajadas = Number.parseFloat(empleados[empleadoIdx].horas) || 0
+    }
+  }
+
   const jornal = {
     id: Date.now(),
-    empleado: document.getElementById("empleado-jornal").value,
+    empleado: empleadoNombre,
     fecha: document.getElementById("fecha-jornal").value,
-    horas: Number.parseFloat(document.getElementById("horas-trabajadas").value),
+    horas: horasTrabajadas,
     tarifa: Number.parseFloat(document.getElementById("tarifa-hora").value),
     actividad: document.getElementById("actividad-jornal").value,
     total: Number.parseFloat(document.getElementById("total-jornal").value),
@@ -113,6 +124,7 @@ document.getElementById("form-jornales").addEventListener("submit", function (e)
   updateDashboard()
   this.reset()
   initializeDates()
+  llenarSelectEmpleadosJornal()
 
   showAlert("Jornal registrado exitosamente", "success")
 })
@@ -370,10 +382,39 @@ document.getElementById("form-reportes").addEventListener("submit", (e) => {
   showAlert(`Generando reporte ${tipoReporte} desde ${fechaInicio} hasta ${fechaFin} en formato ${formato}`, "success")
 })
 
-// Inicializar la aplicación
+// Llenar select de empleados en el formulario de jornales
+function llenarSelectEmpleadosJornal() {
+  const select = document.getElementById("empleado-jornal")
+  select.innerHTML = '<option value="">Seleccionar empleado</option>'
+  if (window.getEmpleadosRegistrados) {
+    const empleados = window.getEmpleadosRegistrados()
+    empleados.forEach((emp, idx) => {
+      select.innerHTML += `<option value="${idx}">${emp.nombre}</option>`
+    })
+  }
+}
+
+// Al seleccionar empleado, mostrar sus horas trabajadas y deshabilitar el campo
+document.getElementById("empleado-jornal").addEventListener("change", function () {
+  const idx = this.value
+  const horasInput = document.getElementById("horas-trabajadas")
+  if (window.getEmpleadosRegistrados) {
+    const empleados = window.getEmpleadosRegistrados()
+    if (empleados[idx]) {
+      horasInput.value = empleados[idx].horas
+    } else {
+      horasInput.value = ""
+    }
+  }
+  horasInput.disabled = true
+  calcularTotalJornal()
+})
+
+// Inicializar select de empleados al cargar
 document.addEventListener("DOMContentLoaded", () => {
   initializeDates()
   updateDashboard()
+  llenarSelectEmpleadosJornal()
 
   // Datos de ejemplo
   const ejemploIngresos = [
@@ -407,15 +448,46 @@ document.addEventListener("DOMContentLoaded", () => {
   updateEgresosTable()
   updateDashboard()
 })
-function editarIngreso(boton) {
-    const fila = boton.closest("tr");
-    alert("Editar registro de: " + fila.cells[0].textContent);
-    // Aquí puedes abrir un modal o formulario de edición
-  }
 
-  function eliminarIngreso(boton) {
-    const fila = boton.closest("tr");
-    if (confirm("¿Seguro que deseas eliminar este registro?")) {
-      fila.remove();
+// Modificar el registro de jornal para tomar las horas del empleado seleccionado
+document.getElementById("form-jornales").addEventListener("submit", function (e) {
+  e.preventDefault()
+
+  const empleadoIdx = document.getElementById("empleado-jornal").value
+  let empleadoNombre = ""
+  let horasTrabajadas = 0
+  if (window.getEmpleadosRegistrados) {
+    const empleados = window.getEmpleadosRegistrados()
+    if (empleados[empleadoIdx]) {
+      empleadoNombre = empleados[empleadoIdx].nombre
+      horasTrabajadas = Number.parseFloat(empleados[empleadoIdx].horas) || 0
     }
   }
+
+  const jornal = {
+    id: Date.now(),
+    empleado: empleadoNombre,
+    fecha: document.getElementById("fecha-jornal").value,
+    horas: horasTrabajadas,
+    tarifa: Number.parseFloat(document.getElementById("tarifa-hora").value),
+    actividad: document.getElementById("actividad-jornal").value,
+    total: Number.parseFloat(document.getElementById("total-jornal").value),
+  }
+
+  jornales.push(jornal)
+  updateJornalesTable()
+  updateDashboard()
+  this.reset()
+  initializeDates()
+  llenarSelectEmpleadosJornal()
+
+  showAlert("Jornal registrado exitosamente", "success")
+})
+
+// Modificar calcularTotalJornal para usar el valor actual del input (que ya está deshabilitado)
+function calcularTotalJornal() {
+  const horas = Number.parseFloat(document.getElementById("horas-trabajadas").value) || 0
+  const tarifa = Number.parseFloat(document.getElementById("tarifa-hora").value) || 0
+  const total = horas * tarifa
+  document.getElementById("total-jornal").value = total.toFixed(2)
+}
