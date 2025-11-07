@@ -1,4 +1,12 @@
 // Variables globales para almacenar datos
+
+// --- Protección de acceso ---
+// Verifica si el usuario inició sesión (usando localStorage desde login.html)
+if (!localStorage.getItem('login')) {
+  window.location.href = '../login.html'; // Redirige si no hay sesión
+}
+
+
 let ingresos = []
 let egresos = []
 const jornales = []
